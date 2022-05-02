@@ -3,7 +3,7 @@ const inquirer = require("inquirer");
 const inputs = require("./js/inputs");
 const util = require("util");
 const requests = require("./js/requests");
-const table = require("console.table");
+require("console.table");
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -14,11 +14,6 @@ const db = mysql.createConnection({
 
 //promise for database
 db.query = util.promisify(db.query);
-
-// for displaying the table
-const displayTable = (table) => {
-  console.table(table); 
-}
 
 const optionRequest = () => {
   inquirer.prompt(requests.options).then((optionAnswer) => {
@@ -44,11 +39,11 @@ const optionsDepartment = () => {
   });
 };
 
-//asking about why my tables aren't coming back in office hours tomorrow
+
 const tableDisplayDepartment = async () => {
     try {
         const table = await db.query(inputs.department);
-        displayTable(table);
+        console.table(table);
         return optionRequest();
     } catch (err){
         console.log(err);
