@@ -17,7 +17,7 @@ db.query = util.promisify(db.query);
 
 // for displaying the table
 const displayTable = (table) => {
-    console.table(table);
+  console.table(table); 
 }
 
 const optionRequest = () => {
