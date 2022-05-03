@@ -6,7 +6,7 @@ const inputs = {
     roles:
     `SELECT * from role ORDER BY id ASC`,
     newRole:
-    `INSERT INTO role (title, salary) VALUES (?, ?)`,
+    `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`,
     employee:
     `SELECT * from employee ORDER BY id ASC`,
     newEmployee:

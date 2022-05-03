@@ -15,6 +15,16 @@ const db = mysql.createConnection({
 //promise for database
 db.query = util.promisify(db.query);
 
+//when asking for selections
+const selectedOptionList = (message, name, objArray) => {
+  return {
+    type: "list",
+    message: message,
+    name: name,
+    choices: objArray,
+  };
+};
+
 const optionRequest = () => {
   inquirer.prompt(requests.options).then((optionAnswer) => {
     switch (optionAnswer.options) {
@@ -70,11 +80,27 @@ const tableDisplayRoles = async () => {
   }
 };
 
-const addRole = () => {
+const addRole = async () => {
+  try {
+    const departmentTable = await db.query(inputs.department);
+    let departmentArray = departmentTable.map((department) => ({
+      name: department.name,
+      value: department.id,
+    }));
+    requests.addRole.push(
+      selectedOptionList(
+        "Which department will this role belong to?",
+        "department",
+        departmentArray
+      )
+    );
+  } catch (err) {
+    console.log(err);
+  }
   inquirer.prompt(requests.addRole).then(async (addRoleInput) => {
-    const {title, salary} = addRoleInput;
+    const { title, salary, department } = addRoleInput;
     try {
-      await db.query(inputs.newRole, [title, salary]);
+      await db.query(inputs.newRole, [title, salary, department]);
       return optionRequest();
     } catch (err) {
       console.log(err);
@@ -89,17 +115,19 @@ const tableDisplayEmployee = async () => {
   } catch (err) {
     console.log(err);
   }
+  return optionRequest();
 };
 
 const addEmployee = () => {
   inquirer.prompt(requests.addEmployee).then(async (addEmployeeInput) => {
-    const {first_name, last_name} = addEmployeeInput;
+    const { first_name, last_name } = addEmployeeInput;
     try {
       await db.query(inputs.newEmployee, [first_name, last_name]);
       return optionRequest();
     } catch (err) {
       console.log(err);
     }
+    return optionRequest();
   });
 };
 
