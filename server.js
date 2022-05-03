@@ -18,36 +18,61 @@ db.query = util.promisify(db.query);
 const optionRequest = () => {
   inquirer.prompt(requests.options).then((optionAnswer) => {
     switch (optionAnswer.options) {
-      case "Departments":
-        return optionsDepartment();
-      case "Cancel":
-        console.log("Bye!");
-        return optionRequest();
-    }
-  });
-};
-
-const optionsDepartment = () => {
-  inquirer.prompt(requests.department).then((departmentInput) => {
-    switch (departmentInput.action) {
-      case "View Departments":
+      case "View All Departments":
         return tableDisplayDepartment();
+      case "View All Employees":
+        return tableDisplayEmployee();
+      case "View All Roles":
+        return tableDisplayRoles();
+      case "Add Department":
+        return addDepartment();
       case "Cancel":
         console.log("Bye!");
         return optionRequest();
     }
   });
 };
-
 
 const tableDisplayDepartment = async () => {
+  try {
+    const table = await db.query(inputs.department);
+    console.table(table);
+    return optionRequest();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const addDepartment = () => {
+  inquirer
+  .prompt (requests.addDepartment)
+  .then (async (addDepartmentInput)=>{
+    const newDept = addDepartmentInput.name;
     try {
-        const table = await db.query(inputs.department);
-        console.table(table);
-        return optionRequest();
+      await db.query(inputs.newDepartment, newDept);
+      return optionRequest();
     } catch (err){
-        console.log(err);
+      console.log(err);
     }
+  });
+}
+
+const tableDisplayEmployee = async () => {
+  try {
+    const table = await db.query(inputs.employee);
+    console.table(table);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const tableDisplayRoles = async () => {
+  try {
+    const table = await db.query(inputs.roles);
+    console.table(table);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 optionRequest();

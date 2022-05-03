@@ -4,37 +4,31 @@ const requests = {
       type: "list",
       message: "Select what you would like to work with today",
       name: "options",
-      choices: ["Departments", "Roles", "Employees", "Cancel"],
-    },
-  ],
-
-  department: [
-    {
-      type: "list",
-      message: "Choose from the following:",
-      name: "action",
       choices: [
-        "View Departments",
-        "View Department Budget",
+        "View All Departments",
+        "View All Roles",
+        "View All Employees",
         "Add Department",
-        "Delete Department",
-        "Cancel",
+        "Add a Role",
+        "Add an Employee",
+        "Update an Employee Role",
+        "Cancel"
       ],
     },
   ],
-
-  role: [
-      {
-        type: "list",
-        message: "Choose from the following:",
-        name: "action",
-        choices: [
-            "View Roles",
-            "Add Role",
-            "Delete Role"
-        ],
+  addDepartment: [
+    {
+      type: "input",
+      message: "Please add department name:",
+      name: "name",
+      validate: (input) => {
+        if (input !== ''){
+          return true;
+        }
+        return "Not a valid department name"
       }
-    ],
+    }
+  ],
 };
 
 module.exports = requests;
