@@ -26,6 +26,12 @@ const optionRequest = () => {
         return tableDisplayRoles();
       case "Add Department":
         return addDepartment();
+      case "Add Role":
+        return addRole();
+      case "Add Employee":
+        return addEmployee();
+      case "Update Employee Role":
+        return updateEmployeeRole();
       case "Cancel":
         console.log("Bye!");
         return optionRequest();
@@ -44,18 +50,37 @@ const tableDisplayDepartment = async () => {
 };
 
 const addDepartment = () => {
-  inquirer
-  .prompt (requests.addDepartment)
-  .then (async (addDepartmentInput)=>{
+  inquirer.prompt(requests.addDepartment).then(async (addDepartmentInput) => {
     const newDept = addDepartmentInput.name;
     try {
       await db.query(inputs.newDepartment, newDept);
       return optionRequest();
-    } catch (err){
+    } catch (err) {
       console.log(err);
     }
   });
-}
+};
+
+const tableDisplayRoles = async () => {
+  try {
+    const table = await db.query(inputs.roles);
+    console.table(table);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const addRole = () => {
+  inquirer.prompt(requests.addRole).then(async (addRoleInput) => {
+    const {title, salary} = addRoleInput;
+    try {
+      await db.query(inputs.newRole, [title, salary]);
+      return optionRequest();
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
 
 const tableDisplayEmployee = async () => {
   try {
@@ -66,13 +91,16 @@ const tableDisplayEmployee = async () => {
   }
 };
 
-const tableDisplayRoles = async () => {
-  try {
-    const table = await db.query(inputs.roles);
-    console.table(table);
-  } catch (err) {
-    console.log(err);
-  }
+const addEmployee = () => {
+  inquirer.prompt(requests.addEmployee).then(async (addEmployeeInput) => {
+    const {first_name, last_name} = addEmployeeInput;
+    try {
+      await db.query(inputs.newEmployee, [first_name, last_name]);
+      return optionRequest();
+    } catch (err) {
+      console.log(err);
+    }
+  });
 };
 
 optionRequest();
