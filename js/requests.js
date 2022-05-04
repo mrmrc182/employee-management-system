@@ -11,7 +11,6 @@ const requests = {
         "Add Department",
         "Add Role",
         "Add Employee",
-        "Update Employee Role",
         "Cancel"
       ],
     },
@@ -80,4 +79,5 @@ const requests = {
   ],
 };
 
+// "Update Employee Role", (removed from the main array for the video)
 module.exports = requests;

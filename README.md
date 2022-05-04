@@ -14,7 +14,7 @@ To use this app, you will need to have Node, MySQL, and content.table installed.
 # Testing
 To start, run MySql and run the db/schema.sql file.  Then you will run "node server.js" from the command line.  Then select and answer the prompts as necessary.  See the video below for a demonstration.  Below that, I have attached a screenshot for what the prompts should look like when the app is called correctly.
 
-![Refer to this video]()
+[Refer to this video for a demonstration of the app](https://drive.google.com/file/d/1eVQo9LQcCxoIToEVQXrksezZYFP0f9LN/view)
 
 ![Screenshot of what the app will look like when called correctly](emsScreenshot.png)
 
