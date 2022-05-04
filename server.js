@@ -40,16 +40,14 @@ const optionRequest = () => {
         return addRole();
       case "Add Employee":
         return addEmployee();
+      case "Update Employee Role":
+        return updateEmployeeRole();
       case "Cancel":
         console.log("Bye!");
         return optionRequest();
     }
   });
 };
-
-// case "Update Employee Role":
-      //code here is linked to other commented out code from line 171-233
-      //   return updateEmployeeRole();
 
 const tableDisplayDepartment = async () => {
   try {
@@ -160,7 +158,12 @@ const addEmployee = async () => {
   inquirer.prompt(requests.addEmployee).then(async (addEmployeeInput) => {
     const { first_name, last_name, role, manager } = addEmployeeInput;
     try {
-      await db.query(inputs.newEmployee, [first_name, last_name, role, manager]);
+      await db.query(inputs.newEmployee, [
+        first_name,
+        last_name,
+        role,
+        manager,
+      ]);
       return optionRequest();
     } catch (err) {
       console.log(err);
@@ -169,68 +172,72 @@ const addEmployee = async () => {
   });
 };
 
-// const updateEmployeeRole = async () => {
-//   let updateEmployeePrompts = [];
-//   try {
-//     const employeeTable = await db.query(inputs.employee);
-//     let employeeArray = employeeTable.map((employee) => ({
-//       name: employee.first_name + " " + employee.last_name,
-//       value: employee.id,
-//     }));
-//     updateEmployeePrompts.push(
-//       selectedOptionList(
-//         "Which employee will you be updating?",
-//         "employee",
-//         employeeArray
-//       )
-//     );
-//   } catch (err) {
-//     console.log(err);
-//   }
-//   try {
-//     const roleTable = await db.query(inputs.roles);
-//     let roleArray = roleTable.map((role) => ({
-//       name: role.title,
-//       value: role.id,
-//     }));
-//     updateEmployeePrompts.push(
-//       selectedOptionList(
-//         "Which role will the employee now have?",
-//         "role",
-//         roleArray
-//       )
-//     );
-//   } catch (err) {
-//     console.log(err);
-//   }
-//   try {
-//     const managerTable = await db.query(inputs.employee);
-//     let managerArray = managerTable.map((employee) => ({
-//       name: employee.first_name + " " + employee.last_name,
-//       value: employee.id,
-//     }));
-//     updateEmployeePrompts.push(
-//       selectedOptionList(
-//         "Who will be the employee's manager?",
-//         "manager",
-//         managerArray
-//       )
-//     );
-//   } catch (err) {
-//     console.log(err);
-//   }
-//   inquirer
-//     .prompt(updateEmployeePrompts)
-//     .then(async (updateEmployeePromptsResponse) => {
-//       const { id, role, manager } = updateEmployeePromptsResponse;
-//       try {
-//         await db.query(inputs.updateEmployee, [first_name, last_name, role, manager]);
-//         return optionRequest();
-//       } catch (err) {
-//         console.log(err);
-//         return optionRequest();
-//       }
-//     });
-// };
+const updateEmployeeRole = async () => {
+  let updateEmployeePrompts = [];
+  try {
+    const employeeTable = await db.query(inputs.employee);
+    console.log(employeeTable);
+    let employeeArray = employeeTable.map((employee) => ({
+      name: employee.first_name + " " + employee.last_name,
+      value: employee.id,
+    }));
+    updateEmployeePrompts.push(
+      selectedOptionList(
+        "Which employee will you be updating?",
+        "employee",
+        employeeArray
+      )
+    );
+  } catch (err) {
+    console.log(err);
+  }
+  try {
+    const roleTable = await db.query(inputs.roles);
+    let roleArray = roleTable.map((role) => ({
+      name: role.title,
+      value: role.id,
+    }));
+    updateEmployeePrompts.push(
+      selectedOptionList(
+        "Which role will the employee now have?",
+        "role",
+        roleArray
+      )
+    );
+  } catch (err) {
+    console.log(err);
+  }
+  try {
+    const managerTable = await db.query(inputs.employee);
+    console.log(managerTable);
+    let managerArray = managerTable.map((employee) => ({
+      name: employee.first_name + " " + employee.last_name,
+      value: employee.id,
+    }));
+    updateEmployeePrompts.push(
+      selectedOptionList(
+        "Who will be the employee's manager?",
+        "manager",
+        managerArray
+      )
+    );
+  } catch (err) {
+    console.log(err);
+  }
+  inquirer
+    .prompt(updateEmployeePrompts)
+    .then(async (updateEmployeePromptsResponse) => {
+      console.log(updateEmployeePromptsResponse);
+      const { role, manager, employee } = updateEmployeePromptsResponse;
+      
+      try {
+        await db.query(inputs.updateEmployee, [role, manager, employee]);
+        return optionRequest();
+      } catch (err) {
+        console.log(err);
+        return optionRequest();
+      }
+    });
+};
 
 optionRequest();

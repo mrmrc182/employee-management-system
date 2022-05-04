@@ -11,6 +11,7 @@ const requests = {
         "Add Department",
         "Add Role",
         "Add Employee",
+        "Update Employee Role",
         "Cancel"
       ],
     },
