@@ -140,9 +140,9 @@ const addEmployee = async () => {
     console.log(err);
   }
   inquirer.prompt(requests.addEmployee).then(async (addEmployeeInput) => {
-    const { first_name, last_name, role_id } = addEmployeeInput;
+    const { first_name, last_name, role } = addEmployeeInput;
     try {
-      await db.query(inputs.newEmployee, [first_name, last_name, role_id]);
+      await db.query(inputs.newEmployee, [first_name, last_name, role]);
       return optionRequest();
     } catch (err) {
       console.log(err);
