@@ -8,9 +8,14 @@ const inputs = {
     newRole:
     `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`,
     employee:
-    `SELECT * from employee ORDER BY id ASC`,
+    `SELECT employee.id AS ID, first_name AS First, last_name AS Last, role.title AS Title, department.name AS Dept, role.salary AS Salary FROM employee 
+    JOIN role ON employee.role_id = role.id 
+    JOIN department ON role.department_id = department.id ORDER BY last_name ASC;`,
     newEmployee:
-    `INSERT INTO employee (first_name, last_name) VALUES (?, ?)`
+    `INSERT INTO employee (first_name, last_name, role_id) VALUES (?, ?, ?)`,
+    updateEmployee: (role) => { 
+    return `UPDATE employee SET ${role}_id = (?) WHERE id= (?)`
+    }
 }
 
 module.exports = inputs;

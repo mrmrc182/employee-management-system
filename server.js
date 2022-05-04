@@ -56,6 +56,7 @@ const tableDisplayDepartment = async () => {
     return optionRequest();
   } catch (err) {
     console.log(err);
+    return optionRequest();
   }
 };
 
@@ -67,6 +68,7 @@ const addDepartment = () => {
       return optionRequest();
     } catch (err) {
       console.log(err);
+      return optionRequest();
     }
   });
 };
@@ -75,8 +77,10 @@ const tableDisplayRoles = async () => {
   try {
     const table = await db.query(inputs.roles);
     console.table(table);
+    return optionRequest();
   } catch (err) {
     console.log(err);
+    return optionRequest();
   }
 };
 
@@ -118,17 +122,81 @@ const tableDisplayEmployee = async () => {
   return optionRequest();
 };
 
-const addEmployee = () => {
+const addEmployee = async () => {
+  try {
+    const roleTable = await db.query(inputs.roles);
+    let roleArray = roleTable.map((role) => ({
+      name: role.title,
+      value: role.id,
+    }));
+    requests.addEmployee.push(
+      selectedOptionList(
+        "Which role will the employee have?",
+        "role",
+        roleArray
+      )
+    );
+  } catch (err) {
+    console.log(err);
+  }
   inquirer.prompt(requests.addEmployee).then(async (addEmployeeInput) => {
-    const { first_name, last_name } = addEmployeeInput;
+    const { first_name, last_name, role_id } = addEmployeeInput;
     try {
-      await db.query(inputs.newEmployee, [first_name, last_name]);
+      await db.query(inputs.newEmployee, [first_name, last_name, role_id]);
       return optionRequest();
     } catch (err) {
       console.log(err);
     }
     return optionRequest();
   });
+};
+
+const updateEmployeeRole = async () => {
+  let updateEmployeePrompts = [];
+  try {
+    const employeeTable = await db.query(inputs.employee);
+    let employeeArray = employeeTable.map((employee) => ({
+      name: employee.First,
+      value: employee.ID,
+    }));
+    updateEmployeePrompts.push(
+      selectedOptionList(
+        "Which employee will you be updating?",
+        "employee",
+        employeeArray
+      )
+    );
+  } catch (err) {
+    console.log(err);
+  }
+  try {
+    const roleTable = await db.query(inputs.roles);
+    let roleArray = roleTable.map((role) => ({
+      name: role.title,
+      value: role.id,
+    }));
+    updateEmployeePrompts.push(
+      selectedOptionList(
+        "Which role will the employee now have?",
+        "role",
+        roleArray
+      )
+    );
+  } catch (err) {
+    console.log(err);
+  }
+  inquirer
+    .prompt(updateEmployeePrompts)
+    .then(async (updateEmployeePromptsResponse) => {
+      const { employee, role } = updateEmployeePromptsResponse;
+      try {
+        await db.query(inputs.updateEmployee("role"), [role, employee]);
+        return optionRequest();
+      } catch (err) {
+        console.log(err);
+        return optionRequest();
+      }
+    });
 };
 
 optionRequest();
