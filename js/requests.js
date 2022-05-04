@@ -78,17 +78,6 @@ const requests = {
       }
     },
   ],
-  updateEmployeeRole: [
-      {
-        type: "list",
-        message: "Are you sure you want to update an employee role?",
-        name: "update",
-        choices: [
-          "Yes",
-          "No"
-        ],
-      },
-    ],
 };
 
 module.exports = requests;
