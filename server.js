@@ -139,10 +139,26 @@ const addEmployee = async () => {
   } catch (err) {
     console.log(err);
   }
+  try {
+    const managerTable = await db.query(inputs.employee);
+    let managerArray = managerTable.map((employee) => ({
+      name: employee.First + " " + employee.Last,
+      value: employee.ID,
+    }));
+    requests.addEmployee.push(
+      selectedOptionList(
+        "Who will be the employee's manager?",
+        "manager",
+        managerArray
+      )
+    );
+  } catch (err) {
+    console.log(err);
+  }
   inquirer.prompt(requests.addEmployee).then(async (addEmployeeInput) => {
-    const { first_name, last_name, role } = addEmployeeInput;
+    const { first_name, last_name, role, manager } = addEmployeeInput;
     try {
-      await db.query(inputs.newEmployee, [first_name, last_name, role]);
+      await db.query(inputs.newEmployee, [first_name, last_name, role, manager]);
       return optionRequest();
     } catch (err) {
       console.log(err);
