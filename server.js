@@ -142,8 +142,8 @@ const addEmployee = async () => {
   try {
     const managerTable = await db.query(inputs.employee);
     let managerArray = managerTable.map((employee) => ({
-      name: employee.First + " " + employee.Last,
-      value: employee.ID,
+      name: employee.first_name + " " + employee.last_name,
+      value: employee.id,
     }));
     requests.addEmployee.push(
       selectedOptionList(
@@ -172,8 +172,8 @@ const updateEmployeeRole = async () => {
   try {
     const employeeTable = await db.query(inputs.employee);
     let employeeArray = employeeTable.map((employee) => ({
-      name: employee.First,
-      value: employee.ID,
+      name: employee.first_name + " " + employee.last_name,
+      value: employee.id,
     }));
     updateEmployeePrompts.push(
       selectedOptionList(
@@ -201,12 +201,28 @@ const updateEmployeeRole = async () => {
   } catch (err) {
     console.log(err);
   }
+  try {
+    const managerTable = await db.query(inputs.employee);
+    let managerArray = managerTable.map((employee) => ({
+      name: employee.first_name + " " + employee.last_name,
+      value: employee.id,
+    }));
+    updateEmployeePrompts.push(
+      selectedOptionList(
+        "Who will be the employee's manager?",
+        "manager",
+        managerArray
+      )
+    );
+  } catch (err) {
+    console.log(err);
+  }
   inquirer
     .prompt(updateEmployeePrompts)
     .then(async (updateEmployeePromptsResponse) => {
-      const { employee, role } = updateEmployeePromptsResponse;
+      const { first_name, last_name, role, manager } = updateEmployeePromptsResponse;
       try {
-        await db.query(inputs.updateEmployee("role"), [role, employee]);
+        await db.query(inputs.updateEmployee, [first_name, last_name, role, manager]);
         return optionRequest();
       } catch (err) {
         console.log(err);
